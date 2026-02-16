@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Button
 import androidx.compose.foundation.layout.Row
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
 
 
 class MainActivity : ComponentActivity() {
@@ -28,7 +30,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TheGreatestCocktailAppTheme {
                 Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
-                    Greeting(
+                    DetailCocktailScreen(
                         name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
@@ -60,25 +62,5 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "onDestroy appelé")
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Row(modifier = modifier) {
-        Text(
-            text = "Hello $name!"
-        )
-        Button(onClick = { /*TODO*/ }) {
-            Text(text = "Click me")
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    TheGreatestCocktailAppTheme {
-        Greeting("Android")
     }
 }
