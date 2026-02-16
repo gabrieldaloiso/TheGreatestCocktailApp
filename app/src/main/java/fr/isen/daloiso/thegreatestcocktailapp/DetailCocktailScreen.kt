@@ -105,7 +105,7 @@ fun DetailCocktailScreen(name: String, modifier: Modifier = Modifier) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Spacer(Modifier.width(8.dp))
-                    Text("Alcoholic", color = MaterialTheme.colorScheme.onSurface)
+                    Text("Alcoholic", color = MaterialTheme.colorScheme.primary)
                 }
             }
 
@@ -128,7 +128,7 @@ fun DetailCocktailScreen(name: String, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
+                    contentColor = MaterialTheme.colorScheme.primary
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
@@ -156,7 +156,7 @@ fun DetailCocktailScreen(name: String, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface,
-                    contentColor = MaterialTheme.colorScheme.onSurface
+                    contentColor = MaterialTheme.colorScheme.primary
                 ),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
