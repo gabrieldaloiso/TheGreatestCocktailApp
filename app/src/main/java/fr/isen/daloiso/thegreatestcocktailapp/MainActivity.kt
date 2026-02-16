@@ -6,61 +6,67 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.foundation.layout.Row
-import android.util.Log
-import androidx.compose.foundation.Image
-import androidx.compose.ui.res.painterResource
-
 
 class MainActivity : ComponentActivity() {
-
-    private val TAG = "MainActivityLifecycle"
-
-    override fun onCreate(savedInstanceState: Bundle?) {super.onCreate(savedInstanceState)
-        Log.d(TAG, "onCreate appelé")
+    @OptIn(ExperimentalMaterial3Api::class)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             TheGreatestCocktailAppTheme {
-                Scaffold( modifier = Modifier.fillMaxSize() ) { innerPadding ->
-                    DetailCocktailScreen(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                val context = LocalContext.current
+
+                Scaffold(modifier = Modifier.fillMaxSize(),
+                    topBar = {
+                        TopAppBar(
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                titleContentColor = MaterialTheme.colorScheme.primary,
+                            ),
+                            title = {
+                                Text(
+                                    "The Greatest Cocktail App",
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            },
+                            actions = {
+                                IconButton(onClick = {
+                                    Toast.makeText(
+                                        context,
+                                        "Ajouté aux favoris !",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Filled.FavoriteBorder,
+                                        contentDescription = "Localized description"
+                                    )
+                                }
+                            }
+                        )
+                    },
+                ) { innerPadding ->
+                    DetailCocktailScreen(Modifier.padding(innerPadding))
                 }
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart appelé")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume appelé")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause appelé")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop appelé")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy appelé")
     }
 }
