@@ -1,5 +1,6 @@
 package fr.isen.daloiso.thegreatestcocktailapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -10,7 +11,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import fr.isen.daloiso.thegreatestcocktailapp.screens.DrinksScreen
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
 
 class DrinksActivity : ComponentActivity() {
@@ -18,12 +21,10 @@ class DrinksActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val context = LocalContext.current
             TheGreatestCocktailAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    DrinksScreen(Modifier.padding(innerPadding))
                 }
             }
         }
@@ -31,7 +32,7 @@ class DrinksActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting2(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
         modifier = modifier
@@ -40,8 +41,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun GreetingPreview2() {
     TheGreatestCocktailAppTheme {
-        Greeting("Android")
+        Greeting2("Android")
     }
 }

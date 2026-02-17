@@ -30,6 +30,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import fr.isen.daloiso.thegreatestcocktailapp.R
+import fr.isen.daloiso.thegreatestcocktailapp.models.Category
+
 @Composable
 fun DetailCocktailScreen(modifier: Modifier) {
     Box(

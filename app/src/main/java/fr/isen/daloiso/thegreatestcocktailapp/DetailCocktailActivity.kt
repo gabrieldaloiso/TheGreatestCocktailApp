@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import fr.isen.daloiso.thegreatestcocktailapp.screens.DetailCocktailScreen
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
 
 class DetailCocktailActivity : ComponentActivity() {
@@ -20,10 +21,7 @@ class DetailCocktailActivity : ComponentActivity() {
         setContent {
             TheGreatestCocktailAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting2(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    DetailCocktailScreen(Modifier.padding(innerPadding))
                 }
             }
         }
@@ -31,7 +29,7 @@ class DetailCocktailActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting2(name: String, modifier: Modifier = Modifier) {
+fun Greeting3(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
         modifier = modifier
@@ -40,8 +38,8 @@ fun Greeting2(name: String, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview2() {
+fun GreetingPreview3() {
     TheGreatestCocktailAppTheme {
-        Greeting2("Android")
+        Greeting3("Android")
     }
 }

@@ -1,13 +1,15 @@
-package fr.isen.daloiso.thegreatestcocktailapp.screens
+package fr.isen.daloiso.thegreatestcocktailapp.models
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import fr.isen.daloiso.thegreatestcocktailapp.R
 
 enum class Category {
-
     BEER,
     COCKTAIL,
     COCOA,
-    COFFEE,
+    COFFE,
     LIQUOR,
     DRINK,
     PUNCH,
@@ -19,13 +21,12 @@ enum class Category {
     OTHER;
 
     companion object {
-
         fun allObjects(): List<Category> {
             return listOf(
                 BEER,
                 COCKTAIL,
                 COCOA,
-                COFFEE,
+                COFFE,
                 LIQUOR,
                 DRINK,
                 PUNCH,
@@ -35,17 +36,15 @@ enum class Category {
                 OTHER
             )
         }
-
         fun toString(category: Category): String {
-            return when (category) {
-
+            return when(category) {
                 ALCOHOLIC -> "Alcoholic"
                 NON_ALCOHOLIC -> "Non alcoholic"
                 OTHER -> "Other / Unknown"
                 BEER -> "Beer"
                 COCKTAIL -> "Cocktail"
                 COCOA -> "Cocoa"
-                COFFEE -> "Coffe"
+                COFFE -> "Coffe"
                 LIQUOR -> "Homemade Liquor"
                 DRINK -> "Ordinary Drink"
                 PUNCH -> "Punch / Party Drink"
@@ -57,27 +56,60 @@ enum class Category {
 
         @Composable
         fun colors(category: Category): List<Color> {
-            return when (category) {
-
-                ALCOHOLIC,
-                NON_ALCOHOLIC -> listOf(
-                    Color(0xFFFBCA9A),
-                    Color(0xFFFBCA9A)
+            return when(category) {
+                ALCOHOLIC -> listOf(
+                    colorResource(R.color.orange_200),
+                    colorResource(R.color.orange_700)
                 )
 
-                OTHER,
-                BEER,
-                COCKTAIL,
-                COCOA,
-                COFFEE,
-                LIQUOR,
-                DRINK,
-                PUNCH,
-                SHAKE,
-                SHOT,
+                NON_ALCOHOLIC -> listOf(
+                    colorResource(R.color.orange_200),
+                    colorResource(R.color.orange_700)
+                )
+
+                OTHER -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
+                BEER -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
+                COCKTAIL -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
+                COCOA -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
+                COFFE -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
+                LIQUOR -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
+                DRINK -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
+                PUNCH -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
+                SHAKE -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
+                SHOT -> listOf(
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
+                )
                 SOFT -> listOf(
-                    Color(0xFFFBCA9A),
-                    Color(0xFFFBCA9A)
+                    colorResource(R.color.teal_200),
+                    colorResource(R.color.teal_700)
                 )
             }
         }
