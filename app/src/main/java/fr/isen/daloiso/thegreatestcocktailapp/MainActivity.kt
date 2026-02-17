@@ -31,10 +31,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.isen.daloiso.thegreatestcocktailapp.screens.CategoriesScreen
 import fr.isen.daloiso.thegreatestcocktailapp.screens.BottomAppBar
 import fr.isen.daloiso.thegreatestcocktailapp.screens.DetailCocktailScreen
+import fr.isen.daloiso.thegreatestcocktailapp.screens.FavoritesScreen
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
 
 data class TabBarItem(
@@ -82,8 +85,20 @@ class MainActivity : ComponentActivity() {
 //                        name = "Android",
 //                        modifier = Modifier.padding(innerPadding)
 //                    )
-                    CategoriesScreen(
-                        Modifier.padding(innerPadding))
+                    NavHost(navController, startDestination = randomItem.title){
+                        composable( route = randomItem.title) {
+                            DetailCocktailScreen(
+                                Modifier.padding(innerPadding))
+                        }
+                        composable( route = categoryItem.title) {
+                            CategoriesScreen(
+                                Modifier.padding(innerPadding))
+                        }
+                        composable( route = favoriteItem.title) {
+                            FavoritesScreen(
+                                Modifier.padding(innerPadding))
+                        }
+                    }
                 }
             }
         }
