@@ -3,4 +3,5 @@
     <string name="igrendient">Ingredient</string>
     <string name="preparation">Preparation</string>
     <string name="title_activity_drinks">DrinksActivity</string>
+    <string name="title_activity_detail_cocktail">DetailCocktailActivity</string>
 </resources>
