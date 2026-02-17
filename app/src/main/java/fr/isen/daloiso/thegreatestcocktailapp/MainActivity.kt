@@ -1,6 +1,8 @@
 package fr.isen.daloiso.thegreatestcocktailapp
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
+import fr.isen.daloiso.thegreatestcocktailapp.screens.CategoriesScreen
 import fr.isen.daloiso.thegreatestcocktailapp.screens.DetailCocktailScreen
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
 
@@ -63,7 +66,14 @@ class MainActivity : ComponentActivity() {
                         )
                     },
                 ) { innerPadding ->
-                    DetailCocktailScreen(Modifier.padding(innerPadding))
+                    //DetailCocktailScreen(Modifier.padding(innerPadding))
+                    CategoriesScreen(
+                        innerPadding,
+                        onCategoryClick = { category ->
+                            Log.d("Category", "click on $category")
+                            val intent = Intent(context, DrinksActivity::class.java)
+                            context.startActivity(intent)
+                        })
                 }
             }
         }
