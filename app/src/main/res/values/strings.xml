@@ -4,4 +4,8 @@
     <string name="preparation">Preparation</string>
     <string name="title_activity_drinks">DrinksActivity</string>
     <string name="title_activity_detail_cocktail">DetailCocktailActivity</string>
+
+    <string name="tab_item_random">Random</string>
+    <string name="tab_item_category">Category</string>
+    <string name="tab_item_favorite">Favorite</string>
 </resources>
