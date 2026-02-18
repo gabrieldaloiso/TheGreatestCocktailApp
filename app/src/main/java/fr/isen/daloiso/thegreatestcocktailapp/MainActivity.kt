@@ -31,14 +31,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.isen.daloiso.thegreatestcocktailapp.network.RetrofitClient
 import fr.isen.daloiso.thegreatestcocktailapp.screens.CategoriesScreen
 import fr.isen.daloiso.thegreatestcocktailapp.screens.BottomAppBar
 import fr.isen.daloiso.thegreatestcocktailapp.screens.DetailCocktailScreen
 import fr.isen.daloiso.thegreatestcocktailapp.screens.FavoritesScreen
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
+import kotlinx.coroutines.launch
 
 data class TabBarItem(
     val title: String,
@@ -51,6 +54,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        testApi()
         setContent {
             val context = LocalContext.current
             val navController = rememberNavController()
@@ -101,6 +105,24 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+    }
+    private fun testApi() {
+        lifecycleScope.launch {
+            try {
+                Log.d("API_TEST", "Start test")
+
+                val randomResponse = RetrofitClient.apiService.getRandomCocktail()
+                val drink = randomResponse.drinks?.firstOrNull()
+                Log.d("API_TEST", "Random drink: ${drink?.strDrink}")
+
+                val categoriesResponse = RetrofitClient.apiService.getCategories()
+                Log.d("API_TEST", "Categories: ${categoriesResponse.drinks?.size}")
+
+            } catch (e: Exception) {
+                Log.e("API_TEST", "Error: ${e.message}")
+            }
+        
         }
     }
 }
