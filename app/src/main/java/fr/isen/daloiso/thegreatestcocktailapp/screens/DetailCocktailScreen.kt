@@ -1,17 +1,32 @@
 package fr.isen.daloiso.thegreatestcocktailapp.screens
 
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,163 +34,207 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
-import fr.isen.daloiso.thegreatestcocktailapp.FavoritesManager
 import fr.isen.daloiso.thegreatestcocktailapp.R
+import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.CocktailResponse
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.Drink
-import fr.isen.daloiso.thegreatestcocktailapp.network.RetrofitClient
-import kotlinx.coroutines.launch
+import fr.isen.daloiso.thegreatestcocktailapp.models.AppBarState
+import fr.isen.daloiso.thegreatestcocktailapp.models.Category
+import fr.isen.daloiso.thegreatestcocktailapp.network.ApiClient
+import retrofit2.Call
+import retrofit2.Response
 
 @Composable
-fun DetailCocktailScreen(modifier: Modifier, drinkId: String?) {
-    var drink by remember { mutableStateOf<Drink?>(null) }
-    var isLoading by remember { mutableStateOf(true) }
-    var isFavorite by remember { mutableStateOf(false) }
+fun RandomCocktailScreen(modifier: Modifier, onComposing: (AppBarState) -> Unit) {
+    var drink = remember { mutableStateOf<Drink?>(null) }
 
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    LaunchedEffect(drinkId) {
-        scope.launch {
-            try {
-                val response = if (drinkId != null) {
-                    RetrofitClient.apiService.getDrinkDetail(drinkId)
-                } else {
-                    RetrofitClient.apiService.getRandomCocktail()
-                }
-                drink = response.drinks?.firstOrNull()
-                drink?.idDrink?.let { id ->
-                    isFavorite = FavoritesManager.isFavorite(context, id)
-                }
-
-                isLoading = false
-            } catch (e: Exception) {
-                isLoading = false
+    LaunchedEffect(Unit) {
+        onComposing (
+            AppBarState("Random Cocktail",
+                actions = { DetailCocktailTopButton(drink.value) })
+        )
+//        drink.value = ApiClient.retrofit.getRandom().drinks?.first()
+        val call = ApiClient.retrofit.getRandomCocktail()
+        call.enqueue(object : retrofit2.Callback<CocktailResponse> {
+            override fun onResponse(
+                call: Call<CocktailResponse?>?,
+                response: Response<CocktailResponse?>?
+            ) {
+                drink.value = response?.body()?.drinks?.first()
             }
-        }
+            override fun onFailure(
+                call: Call<CocktailResponse?>?,
+                t: Throwable?
+            ) {
+                Log.e("request", "getrandom failed ${t?.message}")
+            }
+        })
     }
 
+    drink.value?.let { drink ->
+        DetailCocktailScreen(modifier, drink)
+    } ?: run {
+        Text("Loading")
+    }
+}
+
+@Composable
+fun DetailCocktailScreen(drinkId: String,
+                         onComposing: (AppBarState) -> Unit,
+                         modifier: Modifier) {
+    var drink = remember { mutableStateOf<Drink?>(null) }
+
+    LaunchedEffect(Unit) {
+
+        onComposing (
+            AppBarState("Random Cocktail",
+                actions = { DetailCocktailTopButton(drink.value) })
+        )
+//        drink.value = ApiClient.retrofit.getRandom().drinks?.first()
+        val call = ApiClient.retrofit.getDetailCocktail(drinkId)
+        call.enqueue(object : retrofit2.Callback<CocktailResponse> {
+            override fun onResponse(
+                call: Call<CocktailResponse?>?,
+                response: Response<CocktailResponse?>?
+            ) {
+                drink.value = response?.body()?.drinks?.first()
+            }
+            override fun onFailure(
+                call: Call<CocktailResponse?>?,
+                t: Throwable?
+            ) {
+                Log.e("request", "getrandom failed ${t?.message}")
+            }
+        })
+    }
+
+    drink.value?.let { drink ->
+        DetailCocktailScreen(modifier, drink)
+    } ?: run {
+        Text("Loading")
+    }
+}
+@Composable
+fun DetailCocktailScreen(modifier: Modifier, drink: Drink) {
     Box(
         Modifier.background(
             brush = Brush.verticalGradient(
                 listOf(
-                    colorResource(R.color.orange_200),
-                    colorResource(R.color.orange_700)
+                    colorResource(R.color.orange_700),
+                    colorResource(R.color.orange_200)
                 )
+            ))
+            .fillMaxSize()) {
+        Column(
+            modifier = modifier.fillMaxWidth()
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+            ,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            AsyncImage(
+                model = drink.strDrinkThumb,
+                "",
+                modifier = Modifier
+                    .width(200.dp)
+                    .height(200.dp)
+                    .clip(CircleShape)
+                    .border(
+                        1.dp,
+                        colorResource(R.color.teal_200),
+                        CircleShape
+                    )
             )
-        )
-            .fillMaxSize()
-    ) {
-        if (isLoading) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else if (drink != null) {
-            Column(
-                modifier = modifier.fillMaxWidth()
-                    .padding(16.dp)
-                    .verticalScroll(state = rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
-                ) {
-                    IconButton(
-                        onClick = {
-                            drink?.let { d ->
-                                FavoritesManager.toggleFavorite(
-                                    context,
-                                    d.idDrink ?: "",
-                                    d.strDrink ?: "",
-                                    d.strDrinkThumb ?: ""
-                                )
-                                isFavorite = !isFavorite
-                            }
-                        }
-                    ) {
-                        Icon(
-                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
-                            contentDescription = "Favori",
-                            tint = colorResource(R.color.white),
-                            modifier = Modifier.size(32.dp)
-                        )
-                    }
-                }
 
-                AsyncImage(
-                    model = drink!!.strDrinkThumb,
-                    contentDescription = drink!!.strDrink,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(200.dp)
-                        .height(200.dp)
-                        .clip(CircleShape)
-                        .border(4.dp, colorResource(R.color.orange_700), CircleShape)
-                )
-                Text(
-                    drink!!.strDrink ?: "Sans nom",
-                    fontSize = 40.sp,
-                    color = colorResource(R.color.white)
-                )
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        Text(
-                            text = drink?.strCategory ?: "",
-                            fontSize = 20.sp,
-                            modifier = Modifier
-                                .background(colorResource(R.color.teal_200), shape = RoundedCornerShape(50))
-                                .padding(horizontal = 16.dp, vertical = 6.dp),
-                            fontWeight = FontWeight.Medium
-                        )
-                        Text(
-                            text = drink?.strAlcoholic ?: "",
-                            fontSize = 20.sp,
-                            modifier = Modifier
-                                .background(colorResource(R.color.purple_200), shape = RoundedCornerShape(50))
-                                .padding(horizontal = 16.dp, vertical = 6.dp),
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
+//            Image(
+//                painterResource(R.drawable.cocktail),
+//                "",
+//                contentScale = ContentScale.FillBounds,
+//                modifier = Modifier
+//                    .width(200.dp)
+//                    .height(200.dp)
+//                    .clip(CircleShape)
+//                    .border(
+//                        1.dp,
+//                        colorResource(R.color.teal_200),
+//                        CircleShape
+//                    )
+//            )
+            Text(drink.strDrink ?: "",
+                fontSize = 40.sp,
+                color = colorResource(R.color.white))
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+//                Text("Other / Unknown")
+//                Text("Non alcoholic")
+                CategoryView(Category.OTHER)
+                CategoryView(Category.NON_ALCOHOLIC)
+            }
+            Text(
+                "Cocktail glass",
+                color = colorResource(R.color.grey)
+            ) // Kind of glass
+            Card() {
+                Column(
+                    Modifier.padding(16.dp)
+                        .fillMaxWidth()) {
+                    Text(stringResource(R.string.igrendient),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold)
+                    Text("To be completed")
                 }
-                Text(
-                    drink!!.strGlass ?: "Unknown glass",
-                    color = colorResource(R.color.white)
-                )
-                Card() {
-                    Column(Modifier.padding(16.dp).fillMaxWidth()) {
-                        Text(stringResource(R.string.igrendient))
-                        drink!!.ingredientList().forEach { (ingredient, measure) ->
-                            Text("• ${measure.ifBlank { "" }} $ingredient")
-                        }
-                    }
-                }
-                if (!drink!!.strInstructions.isNullOrBlank()) {
-                    Card() {
-                        Column(Modifier.padding(16.dp).fillMaxWidth()) {
-                            Text(stringResource(R.string.preparation))
-                            Text(drink!!.strInstructions ?: "")
-                        }
-                    }
+            }
+            Card() {
+                Column(
+                    Modifier.padding(16.dp)
+                        .fillMaxWidth()) {
+                    Text(stringResource(R.string.preparation),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold)
+                    Text("To be completed")
                 }
             }
         }
+    }
+}
+
+@Composable
+fun DetailCocktailTopButton(drink: Drink?) {
+    val context = LocalContext.current
+    IconButton({
+        Toast
+            .makeText(context, "Add to favorite", Toast.LENGTH_LONG)
+            .show()
+    }) {
+        Icon(
+            imageVector = Icons.Filled.FavoriteBorder,
+            contentDescription = "Localized description"
+        )
+    }
+}
+
+@Composable
+fun CategoryView(catogory: Category) {
+    Box(Modifier
+        .clip(CircleShape)
+        .background(
+            Brush.horizontalGradient(
+                Category.colors(catogory)
+            )
+        )
+    ) {
+        Text(
+            Category.toString(catogory),
+            fontSize = 20.sp,
+            color = colorResource(R.color.white),
+            modifier = Modifier.padding(8.dp)
+        )
     }
 }

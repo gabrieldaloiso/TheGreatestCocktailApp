@@ -6,43 +6,47 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import fr.isen.daloiso.thegreatestcocktailapp.models.AppBarState
 import fr.isen.daloiso.thegreatestcocktailapp.screens.DetailCocktailScreen
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
 
 class DetailCocktailActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val drinkId = intent.getStringExtra(DRINKID) ?: ""
         enableEdgeToEdge()
-
-        val drinkId = intent.getStringExtra("drinkId")
-
         setContent {
+            val appBarState = remember { mutableStateOf(AppBarState()) }
+
             TheGreatestCocktailAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    DetailCocktailScreen(Modifier.padding(innerPadding), drinkId = drinkId)
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            { Text(appBarState.value.title) },
+                            actions = { appBarState.value.actions?.invoke(this) }
+                        )
+                    },
+                    modifier = Modifier.fillMaxSize()) { innerPadding ->
+                    DetailCocktailScreen(
+                        drinkId= drinkId,
+                        { topBar ->
+                            appBarState.value = topBar
+                        },
+                        Modifier.padding(innerPadding))
                 }
             }
         }
     }
-}
 
-@Composable
-fun Greeting3(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview3() {
-    TheGreatestCocktailAppTheme {
-        Greeting3("Android")
+    companion object {
+        const val DRINKID = "drinkid"
     }
 }

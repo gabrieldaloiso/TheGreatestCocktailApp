@@ -1,16 +1,15 @@
 package fr.isen.daloiso.thegreatestcocktailapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import fr.isen.daloiso.thegreatestcocktailapp.screens.DrinksScreen
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
 
@@ -18,34 +17,50 @@ class DrinksActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Log.d("LifeCycle", "DrinksActivity onCreate")
 
-        val category = intent.getStringExtra("category") ?: "Cocktail"
+        val categoryID = intent.getStringExtra(CATEGORY) ?: ""
 
         setContent {
+            val context = LocalContext.current
             TheGreatestCocktailAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    DrinksScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        category = category
-                    )
+                    DrinksScreen(Modifier.padding(innerPadding), categoryID)
                 }
             }
         }
     }
-}
+    override fun onPause(){
+        super.onPause()
+        Log.d("LifeCycle", "DrinksActivity onPause")
+    }
 
-@Composable
-fun Greeting2(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    override fun onResume(){
+        super.onResume()
+        Log.d("LifeCycle", "DrinksActivity onResume")
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview2() {
-    TheGreatestCocktailAppTheme {
-        Greeting2("Android")
+    override fun onStop(){
+        super.onStop()
+        Log.d("LifeCycle", "DrinksActivity onStop")
+    }
+
+    override fun onDestroy(){
+        super.onDestroy()
+        Log.d("LifeCycle", "DrinksActivity onDestroy")
+    }
+
+    override fun onStart(){
+        super.onStart()
+        Log.d("LifeCycle", "DrinksActivity onStart")
+    }
+
+    override fun onRestart(){
+        super.onRestart()
+        Log.d("LifeCycle", "DrinksActivity onRestart")
+    }
+
+    companion object {
+        const val CATEGORY = "category"
     }
 }
