@@ -1,7 +1,6 @@
 package fr.isen.daloiso.thegreatestcocktailapp
 
 import android.content.Intent
-import android.graphics.drawable.Icon
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
