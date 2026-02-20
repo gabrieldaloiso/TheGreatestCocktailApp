@@ -11,6 +11,18 @@ data class Favorites (
 )
 
 class FavoritesManager {
+    fun  getFavorites(context: Context): List<Drink> {
+        val sharedPreferences = context.getSharedPreferences("favorites", 0)
+        val favorites = sharedPreferences.getString(
+            "favorites",
+            null
+        )
+        if (favorites == null) {
+            return emptyList()
+        }
+        return Gson().fromJson(favorites, Array<Drink>::class.java).toMutableList()
+    }
+
     fun toggleFavorite(drink: Drink, context: Context) {
         val sharedPreferences = context.getSharedPreferences("favorites", 0)
         val favorites = sharedPreferences.getString(
