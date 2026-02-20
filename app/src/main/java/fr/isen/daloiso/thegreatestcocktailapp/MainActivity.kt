@@ -23,6 +23,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,10 @@ import fr.isen.daloiso.thegreatestcocktailapp.screens.BottomAppBar
 import fr.isen.daloiso.thegreatestcocktailapp.screens.CategoriesScreen
 import fr.isen.daloiso.thegreatestcocktailapp.screens.RandomCocktailScreen
 import fr.isen.daloiso.thegreatestcocktailapp.screens.FavoritesScreen
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.MidnightAmber
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.MidnightDark
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.OrangePastel
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.PeachPastel
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
 import retrofit2.Call
 import retrofit2.Response
@@ -84,11 +89,15 @@ class MainActivity : ComponentActivity() {
             TheGreatestCocktailAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     topBar = {
-                        TopAppBar({
-                            Text(appBarState.value.title)
-                        }, actions = {
-                            appBarState.value.actions?.invoke(this)
-                        })
+                        TopAppBar(
+                            title = { Text(appBarState.value.title) },
+                            actions = { appBarState.value.actions?.invoke(this) },
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = PeachPastel,
+                                titleContentColor = MidnightDark,
+                                actionIconContentColor = MidnightDark
+                            )
+                        )
                     },
                     bottomBar = { BottomAppBar(tabItems, navController) }
                 ) { innerPadding ->

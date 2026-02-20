@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -48,6 +50,11 @@ import fr.isen.daloiso.thegreatestcocktailapp.managers.FavoritesManager
 import fr.isen.daloiso.thegreatestcocktailapp.models.AppBarState
 import fr.isen.daloiso.thegreatestcocktailapp.models.Category
 import fr.isen.daloiso.thegreatestcocktailapp.network.ApiClient
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.MintPastel
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.OrangePastel
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.PeachPastel
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.SkyPastel
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.YellowPastel
 import retrofit2.Call
 import retrofit2.Response
 
@@ -148,7 +155,7 @@ fun DetailCocktailScreen(modifier: Modifier, drink: Drink) {
                     .clip(CircleShape)
                     .border(
                         5.dp,
-                        colorResource(R.color.orange_700),
+                        PeachPastel,
                         CircleShape
                     )
             )
@@ -169,20 +176,34 @@ fun DetailCocktailScreen(modifier: Modifier, drink: Drink) {
 //            )
             Text(drink.strDrink ?: "",
                 fontSize = 40.sp,
-                color = colorResource(R.color.white))
+                color = colorResource(R.color.white),
+                lineHeight = 48.sp)
             Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.CenterHorizontally)
             ) {
-//                Text("Other / Unknown")
-//                Text("Non alcoholic")
-                Text(drink.strCategory ?: "Unknown")
-                Text(drink.strAlcoholic ?: "Unknown")
+                Card(colors = CardDefaults.cardColors(containerColor = YellowPastel)) {
+                    Text(
+                        drink.strCategory ?: "Unknown",
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
+                Card(colors = CardDefaults.cardColors(containerColor = MintPastel)) {
+                    Text(
+                        drink.strAlcoholic ?: "Unknown",
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                    )
+                }
             }
-            Text(drink.strGlass ?: "Unknown glass",
-                color = colorResource(R.color.white)
-            )// Kind of glass
-            Card() {
+            Card(colors = CardDefaults.cardColors(containerColor = SkyPastel)) {
+                Text(
+                    drink.strGlass ?: "Unknown glass",
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
+                )
+            } // Kind of glass
+            Card(
+                colors = CardDefaults.cardColors(containerColor = PeachPastel)
+            ) {
                 Column(
                     Modifier.padding(16.dp)
                         .fillMaxWidth()) {
@@ -194,7 +215,9 @@ fun DetailCocktailScreen(modifier: Modifier, drink: Drink) {
                     }
                 }
             }
-            Card() {
+            Card(
+                colors = CardDefaults.cardColors(containerColor = PeachPastel)
+            ) {
                 Column(
                     Modifier.padding(16.dp)
                         .fillMaxWidth()) {
