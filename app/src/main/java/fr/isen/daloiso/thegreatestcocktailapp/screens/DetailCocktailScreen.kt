@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -43,6 +44,7 @@ import coil3.compose.AsyncImage
 import fr.isen.daloiso.thegreatestcocktailapp.R
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.CocktailResponse
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.Drink
+import fr.isen.daloiso.thegreatestcocktailapp.managers.FavoritesManager
 import fr.isen.daloiso.thegreatestcocktailapp.models.AppBarState
 import fr.isen.daloiso.thegreatestcocktailapp.models.Category
 import fr.isen.daloiso.thegreatestcocktailapp.network.ApiClient
@@ -211,15 +213,22 @@ fun DetailCocktailScreen(modifier: Modifier, drink: Drink) {
 @Composable
 fun DetailCocktailTopButton(drink: Drink?) {
     val context = LocalContext.current
-    IconButton({
-        Toast
-            .makeText(context, "Add to favorite", Toast.LENGTH_LONG)
-            .show()
-    }) {
-        Icon(
-            imageVector = Icons.Filled.FavoriteBorder,
-            contentDescription = "Localized description"
-        )
+    val favoritesManager = FavoritesManager()
+    drink?.let { drink ->
+        var isFavorites = remember { mutableStateOf<Boolean>( value = favoritesManager.isFavorite(drink, context))}
+        IconButton({
+            favoritesManager.toggleFavorite(drink, context)
+            isFavorites.value = favoritesManager.isFavorite(drink, context)
+        }) {
+            Icon(
+                imageVector = if (isFavorites.value) {
+                    Icons.Filled.Favorite
+                } else {
+                    Icons.Filled.FavoriteBorder
+                },
+                contentDescription = "Localized description"
+            )
+        }
     }
 }
 
