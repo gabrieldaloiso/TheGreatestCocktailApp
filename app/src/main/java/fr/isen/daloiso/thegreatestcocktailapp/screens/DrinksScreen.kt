@@ -64,7 +64,6 @@ fun DrinksScreen(modifier: Modifier, category: String) {
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Image du cocktail
                         AsyncImage(
                             model = drink.strDrinkThumb,
                             contentDescription = drink.strDrink,

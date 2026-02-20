@@ -18,10 +18,13 @@ class DetailCocktailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val drinkId = intent.getStringExtra("drinkId")
+
         setContent {
             TheGreatestCocktailAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    DetailCocktailScreen(Modifier.padding(innerPadding))
+                    DetailCocktailScreen(Modifier.padding(innerPadding), drinkId = drinkId)
                 }
             }
         }

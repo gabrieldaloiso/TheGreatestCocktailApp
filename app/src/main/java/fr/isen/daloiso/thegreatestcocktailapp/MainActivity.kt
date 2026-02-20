@@ -39,6 +39,7 @@ import fr.isen.daloiso.thegreatestcocktailapp.screens.CategoriesScreen
 import fr.isen.daloiso.thegreatestcocktailapp.screens.BottomAppBar
 import fr.isen.daloiso.thegreatestcocktailapp.screens.DetailCocktailScreen
 import fr.isen.daloiso.thegreatestcocktailapp.screens.FavoritesScreen
+import fr.isen.daloiso.thegreatestcocktailapp.screens.RandomCocktailScreen
 import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.TheGreatestCocktailAppTheme
 import kotlinx.coroutines.launch
 
@@ -68,18 +69,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     topBar = {
                         TopAppBar({
-                            Text("Detail")
-                        }, actions = {
-                            IconButton({
-                                Toast
-                                    .makeText(context, "Add to favorite", Toast.LENGTH_LONG)
-                                    .show()
-                            }) {
-                                Icon(
-                                    imageVector = Icons.Filled.FavoriteBorder,
-                                    contentDescription = "Localized description"
-                                )
-                            }
+                            Text("The Greatest Cocktail")
                         })
                     },
                     bottomBar = { BottomAppBar(tabItems, navController) }
@@ -90,8 +80,9 @@ class MainActivity : ComponentActivity() {
 //                    )
                     NavHost(navController, startDestination = randomItem.title){
                         composable( route = randomItem.title) {
-                            DetailCocktailScreen(
-                                Modifier.padding(innerPadding))
+                            RandomCocktailScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                navController = navController)
                         }
                         composable( route = categoryItem.title) {
                             CategoriesScreen(
@@ -100,6 +91,12 @@ class MainActivity : ComponentActivity() {
                         composable( route = favoriteItem.title) {
                             FavoritesScreen(
                                 Modifier.padding(innerPadding))
+                        }
+                        composable("cocktail/{drinkId}") { backStackEntry ->
+                            DetailCocktailScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                drinkId = backStackEntry.arguments?.getString("drinkId")
+                            )
                         }
                     }
                 }
