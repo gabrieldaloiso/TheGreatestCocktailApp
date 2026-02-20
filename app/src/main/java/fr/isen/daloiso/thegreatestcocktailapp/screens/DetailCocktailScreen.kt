@@ -145,8 +145,8 @@ fun DetailCocktailScreen(modifier: Modifier, drink: Drink) {
                     .height(200.dp)
                     .clip(CircleShape)
                     .border(
-                        1.dp,
-                        colorResource(R.color.teal_200),
+                        5.dp,
+                        colorResource(R.color.orange_700),
                         CircleShape
                     )
             )
@@ -174,13 +174,12 @@ fun DetailCocktailScreen(modifier: Modifier, drink: Drink) {
             ) {
 //                Text("Other / Unknown")
 //                Text("Non alcoholic")
-                CategoryView(Category.OTHER)
-                CategoryView(Category.NON_ALCOHOLIC)
+                Text(drink.strCategory ?: "Unknown")
+                Text(drink.strAlcoholic ?: "Unknown")
             }
-            Text(
-                "Cocktail glass",
-                color = colorResource(R.color.grey)
-            ) // Kind of glass
+            Text(drink.strGlass ?: "Unknown glass",
+                color = colorResource(R.color.white)
+            )// Kind of glass
             Card() {
                 Column(
                     Modifier.padding(16.dp)
@@ -188,7 +187,9 @@ fun DetailCocktailScreen(modifier: Modifier, drink: Drink) {
                     Text(stringResource(R.string.igrendient),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold)
-                    Text("To be completed")
+                    drink.ingredientList().forEach { (ingredient, measure) ->
+                        Text("• ${measure.ifBlank { "" }} $ingredient")
+                    }
                 }
             }
             Card() {
@@ -198,7 +199,9 @@ fun DetailCocktailScreen(modifier: Modifier, drink: Drink) {
                     Text(stringResource(R.string.preparation),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold)
-                    Text("To be completed")
+                    if (!drink.strInstructions.isNullOrBlank()) {
+                        Text(drink.strInstructions ?: "")
+                    }
                 }
             }
         }
