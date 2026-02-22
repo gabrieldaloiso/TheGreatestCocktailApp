@@ -6,8 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -70,6 +72,7 @@ fun CategoriesScreen(modifier: Modifier, onComposing: (AppBarState) -> Unit) {
                     .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                item { Spacer(Modifier.height(8.dp)) }
                 items(list) { category ->
                     Card(Modifier.clickable {
                         val intent = Intent(context, DrinksActivity::class.java)
