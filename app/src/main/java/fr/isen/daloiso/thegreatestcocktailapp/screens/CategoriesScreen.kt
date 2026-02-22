@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,6 +32,7 @@ import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.CocktailResponse
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.DrinkCategory
 import fr.isen.daloiso.thegreatestcocktailapp.models.AppBarState
 import fr.isen.daloiso.thegreatestcocktailapp.network.ApiClient
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.PeachPastel
 import retrofit2.Call
 import retrofit2.Response
 
@@ -74,7 +76,7 @@ fun CategoriesScreen(modifier: Modifier, onComposing: (AppBarState) -> Unit) {
             ) {
                 item { Spacer(Modifier.height(8.dp)) }
                 items(list) { category ->
-                    Card(Modifier.clickable {
+                    Card( colors = CardDefaults.cardColors(containerColor = PeachPastel),modifier = Modifier.clickable {
                         val intent = Intent(context, DrinksActivity::class.java)
                         intent.putExtra(DrinksActivity.CATEGORY, category.strCategory)
                         context.startActivity(intent)

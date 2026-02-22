@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +34,7 @@ import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.DrinkCategory
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.DrinkFilterResponse
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.DrinkPreview
 import fr.isen.daloiso.thegreatestcocktailapp.network.ApiClient
+import fr.isen.daloiso.thegreatestcocktailapp.ui.theme.PeachPastel
 import retrofit2.Call
 import retrofit2.Response
 
@@ -77,7 +79,7 @@ fun DrinksScreen(modifier: Modifier, category: String) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(drinks) { drink ->
-                    Card(Modifier.clickable {
+                    Card(colors = CardDefaults.cardColors(containerColor = PeachPastel), modifier = Modifier.clickable {
                         val intent = Intent(context, DetailCocktailActivity::class.java)
                         intent.putExtra(DetailCocktailActivity.DRINKID, drink.idDrink)
                         context.startActivity(intent)
