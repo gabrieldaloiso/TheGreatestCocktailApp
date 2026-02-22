@@ -3,6 +3,7 @@ package fr.isen.daloiso.thegreatestcocktailapp.screens
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -73,8 +74,11 @@ fun FavoritesScreen(modifier: Modifier, onComposing: (AppBarState) -> Unit) {
                 else -> {}
             }
         }
-        LazyColumn(modifier) {
-            item { Spacer(Modifier.height(16.dp)) }
+        LazyColumn(
+            modifier.padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            item { Spacer(Modifier.height(8.dp)) }
             items(favorites.value) { item ->
                 Card(colors = CardDefaults.cardColors(containerColor = PeachPastel), modifier =Modifier.clickable {
                     val intent = Intent(context, DetailCocktailActivity::class.java)
