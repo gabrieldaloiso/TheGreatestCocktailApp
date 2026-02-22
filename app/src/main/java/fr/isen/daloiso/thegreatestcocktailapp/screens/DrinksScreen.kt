@@ -1,9 +1,12 @@
 package fr.isen.daloiso.thegreatestcocktailapp.screens
 
 import android.content.Intent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,10 +22,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import fr.isen.daloiso.thegreatestcocktailapp.DetailCocktailActivity
+import fr.isen.daloiso.thegreatestcocktailapp.R
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.DrinkCategory
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.DrinkFilterResponse
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.DrinkPreview
@@ -32,53 +38,67 @@ import retrofit2.Response
 
 @Composable
 fun DrinksScreen(modifier: Modifier, category: String) {
+    Box(
+        Modifier.background(
+            brush = Brush.verticalGradient(
+                listOf(
+                    colorResource(R.color.orange_700),
+                    colorResource(R.color.orange_200)
+                )
+            ))
+            .fillMaxSize()) {
 
-    var drinks = remember { mutableStateOf<List<DrinkPreview>?>(null) }
-    val context = LocalContext.current
+        var drinks = remember { mutableStateOf<List<DrinkPreview>?>(null) }
+        val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
-        val call = ApiClient.retrofit.getDrinksPreview(category)
-        call.enqueue(object : retrofit2.Callback<DrinkFilterResponse> {
-            override fun onResponse(
-                call: Call<DrinkFilterResponse?>?,
-                response: Response<DrinkFilterResponse?>?
+        LaunchedEffect(Unit) {
+            val call = ApiClient.retrofit.getDrinksPreview(category)
+            call.enqueue(object : retrofit2.Callback<DrinkFilterResponse> {
+                override fun onResponse(
+                    call: Call<DrinkFilterResponse?>?,
+                    response: Response<DrinkFilterResponse?>?
+                ) {
+                    drinks.value = response?.body()?.drinks
+                }
+
+                override fun onFailure(
+                    call: Call<DrinkFilterResponse?>?,
+                    t: Throwable?
+                ) {
+                    TODO("Not yet implemented")
+                }
+            })
+        }
+
+        drinks.value?.let { drinks ->
+            LazyColumn(
+                modifier
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                drinks.value = response?.body()?.drinks
-            }
+                items(drinks) { drink ->
+                    Card(Modifier.clickable {
+                        val intent = Intent(context, DetailCocktailActivity::class.java)
+                        intent.putExtra(DetailCocktailActivity.DRINKID, drink.idDrink)
+                        context.startActivity(intent)
+                    }) {
+                        Row() {
+                            AsyncImage(
+                                model = drink.strDrinkThumb,
+                                "",
+                                Modifier.width(80.dp)
+                                    .height(80.dp)
+                                    .clip(CircleShape)
+                            )
+                            Text(
+                                "${drink.strDrink}",
+                                Modifier
+                                    .padding(8.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
 
-            override fun onFailure(
-                call: Call<DrinkFilterResponse?>?,
-                t: Throwable?
-            ) {
-                TODO("Not yet implemented")
-            }
-        })
-    }
-
-    drinks.value?.let { drinks ->
-        LazyColumn(modifier
-            .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(drinks){ drink ->
-                Card(Modifier.clickable {
-                    val intent = Intent(context, DetailCocktailActivity::class.java)
-                    intent.putExtra(DetailCocktailActivity.DRINKID, drink.idDrink)
-                    context.startActivity(intent)
-                }) {
-                    Row() {
-                        AsyncImage(
-                            model = drink.strDrinkThumb,
-                            "",
-                            Modifier.width(80.dp)
-                                .height(80.dp)
-                                .clip(CircleShape)
-                        )
-                        Text("${drink.strDrink}",
-                            Modifier
-                                .padding(8.dp)
-                                .fillMaxWidth())
                     }
-
                 }
             }
         }

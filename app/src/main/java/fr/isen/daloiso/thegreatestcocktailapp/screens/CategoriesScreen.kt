@@ -2,8 +2,11 @@ package fr.isen.daloiso.thegreatestcocktailapp.screens
 
 import android.content.Intent
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,9 +18,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import fr.isen.daloiso.thegreatestcocktailapp.DrinksActivity
+import fr.isen.daloiso.thegreatestcocktailapp.R
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.CategoryListResponse
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.CocktailResponse
 import fr.isen.daloiso.thegreatestcocktailapp.dataClasses.DrinkCategory
@@ -28,41 +34,55 @@ import retrofit2.Response
 
 @Composable
 fun CategoriesScreen(modifier: Modifier, onComposing: (AppBarState) -> Unit) {
-    val context = LocalContext.current
-    var categories = remember { mutableStateOf<List<DrinkCategory>?>(null) }
+    Box(
+        Modifier.background(
+            brush = Brush.verticalGradient(
+                listOf(
+                    colorResource(R.color.orange_700),
+                    colorResource(R.color.orange_200)
+                )
+            ))
+            .fillMaxSize()) {
+        val context = LocalContext.current
+        var categories = remember { mutableStateOf<List<DrinkCategory>?>(null) }
 
-    LaunchedEffect(Unit) {
-        onComposing(
-            AppBarState("Categories")
-        )
-        val call = ApiClient.retrofit.getCategories()
-        call.enqueue(object : retrofit2.Callback<CategoryListResponse> {
-            override fun onResponse(
-                call: Call<CategoryListResponse>,
-                response: Response<CategoryListResponse>
+        LaunchedEffect(Unit) {
+            onComposing(
+                AppBarState("Categories")
+            )
+            val call = ApiClient.retrofit.getCategories()
+            call.enqueue(object : retrofit2.Callback<CategoryListResponse> {
+                override fun onResponse(
+                    call: Call<CategoryListResponse>,
+                    response: Response<CategoryListResponse>
+                ) {
+                    categories.value = response?.body()?.drinks
+                }
+
+                override fun onFailure(call: Call<CategoryListResponse>, t: Throwable) {
+                    Log.e("request", "getrandom failed ${t?.message}")
+                }
+            })
+        }
+        categories.value?.let { list ->
+            LazyColumn(
+                modifier
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                categories.value = response?.body()?.drinks
-            }
-
-            override fun onFailure(call: Call<CategoryListResponse>, t: Throwable) {
-                Log.e("request", "getrandom failed ${t?.message}")
-            }
-        })
-    }
-    categories.value?.let { list ->
-        LazyColumn(modifier
-            .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            items(list){ category ->
-                Card(Modifier.clickable {
-                    val intent = Intent(context, DrinksActivity::class.java)
-                    intent.putExtra(DrinksActivity.CATEGORY, category.strCategory)
-                    context.startActivity(intent)
-                }) {
-                    Text("${category.strCategory}",
-                        Modifier
-                            .padding(8.dp)
-                            .fillMaxWidth())
+                items(list) { category ->
+                    Card(Modifier.clickable {
+                        val intent = Intent(context, DrinksActivity::class.java)
+                        intent.putExtra(DrinksActivity.CATEGORY, category.strCategory)
+                        context.startActivity(intent)
+                    }) {
+                        Text(
+                            "${category.strCategory}",
+                            Modifier
+                                .padding(8.dp)
+                                .fillMaxWidth()
+                        )
+                    }
                 }
             }
         }
